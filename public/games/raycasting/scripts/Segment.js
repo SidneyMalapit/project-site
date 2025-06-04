@@ -1,5 +1,10 @@
-import Vector from './Vector.js';
-export default class Segment {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const Vector_js_1 = __importDefault(require("./Vector.js"));
+class Segment {
     constructor(_start, _end) {
         this._start = _start;
         this._end = _end;
@@ -16,8 +21,9 @@ export default class Segment {
         const t = ((a.x - c.x) * (c.y - d.y) - (a.y - c.y) * (c.x - d.x)) / denominator;
         const u = -((a.x - b.x) * (a.y - c.y) - (a.y - b.y) * (a.x - c.x)) / denominator;
         if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-            return new Vector(a.x + t * (b.x - a.x), a.y + t * (b.y - a.y));
+            return new Vector_js_1.default(a.x + t * (b.x - a.x), a.y + t * (b.y - a.y));
         }
         return null;
     }
 }
+exports.default = Segment;

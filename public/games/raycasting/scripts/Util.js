@@ -1,10 +1,15 @@
-import Vector from './Vector.js';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const Vector_js_1 = __importDefault(require("./Vector.js"));
 const Util = {
-    mousePos: new Vector(0, 0),
+    mousePos: new Vector_js_1.default(0, 0),
     mouseMoved: false,
-    getRelativeMousePos(canvas, origin = new Vector(0, 0)) {
+    getRelativeMousePos(canvas, origin = new Vector_js_1.default(0, 0)) {
         const rect = canvas.getBoundingClientRect();
-        return new Vector(Util.mousePos.x - rect.left, Util.mousePos.y - rect.top).subtract(origin);
+        return new Vector_js_1.default(Util.mousePos.x - rect.left, Util.mousePos.y - rect.top).subtract(origin);
     },
     // Normalize an angle to the range (-pi, pi]
     normalizeAngle(angle) {
@@ -33,4 +38,4 @@ addEventListener('mousemove', (event) => {
     Util.mousePos.x = event.clientX;
     Util.mousePos.y = event.clientY;
 });
-export default Util;
+exports.default = Util;

@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx tsx watch --include public/**/* index"
+    "start": "node dist/index",
+    "test": "npx tsx watch --include public/**/* src/index",
+    "build": "npx tsc --project tsconfig.json",
+    "clean": "del dist\\*"
   },
   "keywords": [],
   "author": "Sidney Malapit",

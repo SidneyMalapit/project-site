@@ -1,29 +1,32 @@
 import { default as Cell } from './MinesweeperCell.js';
-var MinesweeperGame = /** @class */ (function () {
-    function MinesweeperGame(rowCount, columnCount) {
-        this._isUninitialized = true;
-        this.mineCount = 0;
+export default class MinesweeperGame {
+    grid;
+    _rows;
+    _columns;
+    cellsRevealed;
+    _isUninitialized = true;
+    mineCount = 0;
+    constructor(rowCount, columnCount) {
         this._rows = rowCount;
         this._columns = columnCount;
-        this.grid = Array.from({ length: this.size }, function () { return new Cell; });
+        this.grid = Array.from({ length: this.size }, () => new Cell);
     }
-    MinesweeperGame.prototype.populate = function (mineCount, saved) {
-        var _a = this, grid = _a.grid, size = _a.size;
+    populate(mineCount, saved) {
+        const { grid, size } = this;
         if (mineCount <= 0 || mineCount >= size) {
-            throw RangeError("cannot populate field of size ".concat(size, " with ").concat(mineCount, " mines"));
+            throw RangeError(`cannot populate field of size ${size} with ${mineCount} mines`);
         }
-        this.validate.apply(this, saved);
+        this.validate(...saved);
         // plant mines and setup cell values
-        var saveIndex = this.coordinateToIndex.apply(this, saved);
-        var neighborIndices = this.getNeighborIndices.apply(this, saved);
-        for (var index = Math.floor(this.random * size); mineCount > 0; mineCount--) {
+        const saveIndex = this.coordinateToIndex(...saved);
+        const neighborIndices = this.getNeighborIndices(...saved);
+        for (let index = Math.floor(this.random * size); mineCount > 0; mineCount--) {
             while (grid[index].isMine || index === saveIndex || neighborIndices.includes(index)) {
                 index = Math.floor(this.random * size);
             }
             grid[index].rig();
-            var n = [];
-            for (var _i = 0, _b = this.getNeighbors.apply(this, this.indexToCoordinate(index)); _i < _b.length; _i++) {
-                var neighbor = _b[_i];
+            const n = [];
+            for (const neighbor of this.getNeighbors(...this.indexToCoordinate(index))) {
                 n.push(neighbor);
                 if (!neighbor || neighbor.isMine) {
                     continue;
@@ -34,11 +37,11 @@ var MinesweeperGame = /** @class */ (function () {
         this.mineCount = mineCount;
         this.cellsRevealed = 0;
         this._isUninitialized = false;
-    };
-    MinesweeperGame.prototype.getNeighborIndices = function (r, c) {
-        var indices = [];
-        for (var i = -1; i <= 1; i++) {
-            for (var j = -1; j <= 1; j++) {
+    }
+    getNeighborIndices(r, c) {
+        const indices = [];
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
                 if (!i && !j || !this.isValidCoordinate(r + i, c + j)) {
                     continue;
                 }
@@ -46,11 +49,11 @@ var MinesweeperGame = /** @class */ (function () {
             }
         }
         return indices;
-    };
-    MinesweeperGame.prototype.getNeighbors = function (r, c) {
-        var neighbors = [];
-        for (var i = -1; i <= 1; i++) {
-            for (var j = -1; j <= 1; j++) {
+    }
+    getNeighbors(r, c) {
+        const neighbors = [];
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
                 if (!i && !j) {
                     continue;
                 }
@@ -58,112 +61,79 @@ var MinesweeperGame = /** @class */ (function () {
             }
         }
         return neighbors;
-    };
+    }
     /**
      * @returns {boolean} true if a mine was found
      **/
-    MinesweeperGame.prototype.dig = function (coords, modifiedCoords, mineCount) {
-        var _a;
-        if (modifiedCoords === void 0) { modifiedCoords = null; }
-        if (mineCount === void 0) { mineCount = NaN; }
+    dig(coords, modifiedCoords = null, mineCount = NaN) {
         if (!this._isUninitialized && !isNaN(mineCount)) {
             console.trace('attempted to reinitialize minefield');
         }
-        else if (this.at.apply(this, coords).isFlagged) {
+        else if (this.at(...coords).isFlagged) {
             return false;
         }
         else {
             this.populate(mineCount, coords);
         }
-        var r = coords[0], c = coords[1];
-        this.validate.apply(this, coords);
-        var cell = this.at.apply(this, coords);
+        const [r, c] = coords;
+        this.validate(...coords);
+        const cell = this.at(...coords);
         if (cell.isDug) {
             return false;
         }
         cell.dig();
         this.cellsRevealed++;
-        (_a = modifiedCoords === null || modifiedCoords === void 0 ? void 0 : modifiedCoords.push) === null || _a === void 0 ? void 0 : _a.call(modifiedCoords, [r, c]);
+        modifiedCoords?.push?.([r, c]);
         if (cell.isMine) {
             return true;
         }
-        var mineFound = false;
+        let mineFound = false;
         if (cell.count === 0) {
-            for (var _i = 0, _b = this.getNeighborIndices(r, c); _i < _b.length; _i++) {
-                var i = _b[_i];
-                var coord = this.indexToCoordinate(i);
+            for (const i of this.getNeighborIndices(r, c)) {
+                const coord = this.indexToCoordinate(i);
                 if (i === this.coordinateToIndex(r, c)) {
                     continue;
                 }
-                var result = this.dig(coord, modifiedCoords);
-                mineFound || (mineFound = result);
+                const result = this.dig(coord, modifiedCoords);
+                mineFound ||= result;
             }
         }
         return mineFound;
-    };
+    }
     /**
      * @returns {boolean} true if a mine was found
      **/
-    MinesweeperGame.prototype.digNeighborsIfFlagged = function (coords, modifiedCoords) {
-        var _this = this;
-        if (modifiedCoords === void 0) { modifiedCoords = null; }
-        var neighborIndices = this.getNeighborIndices.apply(this, coords);
-        var adjacentFlagCount = neighborIndices.reduce(function (acc, coord) { return acc + +_this.grid[coord].isFlagged; }, 0);
-        var _a = this.at.apply(this, coords), isMine = _a.isMine, count = _a.count, isDug = _a.isDug;
+    digNeighborsIfFlagged(coords, modifiedCoords = null) {
+        const neighborIndices = this.getNeighborIndices(...coords);
+        const adjacentFlagCount = neighborIndices.reduce((acc, coord) => acc + +this.grid[coord].isFlagged, 0);
+        const { isMine, count, isDug } = this.at(...coords);
         if (!isDug || adjacentFlagCount !== count) {
             return false;
         }
-        var mineFound = false;
-        for (var _i = 0, neighborIndices_1 = neighborIndices; _i < neighborIndices_1.length; _i++) {
-            var i = neighborIndices_1[_i];
-            mineFound || (mineFound = this.dig(this.indexToCoordinate(i), modifiedCoords));
+        let mineFound = false;
+        for (const i of neighborIndices) {
+            mineFound ||= this.dig(this.indexToCoordinate(i), modifiedCoords);
         }
         return mineFound;
-    };
-    MinesweeperGame.prototype.toggleFlag = function (r, c) { return this.at(r, c).toggleFlag(); };
-    MinesweeperGame.prototype.at = function (r, c) {
+    }
+    toggleFlag(r, c) { return this.at(r, c).toggleFlag(); }
+    at(r, c) {
         this.validate(r, c);
         return this.grid[this.coordinateToIndex(r, c)];
-    };
-    MinesweeperGame.prototype.validate = function (r, c) {
+    }
+    validate(r, c) {
         if (this.isValidCoordinate(r, c)) {
             return;
         }
-        throw RangeError("coordinate (".concat(c, ", ").concat(r, ") out of bounds"));
-    };
-    MinesweeperGame.prototype.isValidCoordinate = function (r, c) { return r >= 0 && c >= 0 && r < this.rows && c < this.columns; };
-    MinesweeperGame.prototype.indexToCoordinate = function (i) { return [Math.floor(i / this.columns), i % this.columns]; };
-    MinesweeperGame.prototype.coordinateToIndex = function (r, c) { return r * this.columns + c; };
-    Object.defineProperty(MinesweeperGame.prototype, "rows", {
-        get: function () { return this._rows; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(MinesweeperGame.prototype, "columns", {
-        get: function () { return this._columns; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(MinesweeperGame.prototype, "size", {
-        get: function () { return this.rows * this.columns; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(MinesweeperGame.prototype, "isWon", {
-        get: function () { return this.cellsRevealed === this.size - this.mineCount; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(MinesweeperGame.prototype, "isUninitialized", {
-        get: function () { return this._isUninitialized; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(MinesweeperGame.prototype, "random", {
-        get: function () { return Math.random(); },
-        enumerable: false,
-        configurable: true
-    });
-    return MinesweeperGame;
-}());
-export default MinesweeperGame;
+        throw RangeError(`coordinate (${c}, ${r}) out of bounds`);
+    }
+    isValidCoordinate(r, c) { return r >= 0 && c >= 0 && r < this.rows && c < this.columns; }
+    indexToCoordinate(i) { return [Math.floor(i / this.columns), i % this.columns]; }
+    coordinateToIndex(r, c) { return r * this.columns + c; }
+    get rows() { return this._rows; }
+    get columns() { return this._columns; }
+    get size() { return this.rows * this.columns; }
+    get isWon() { return this.cellsRevealed === this.size - this.mineCount; }
+    get isUninitialized() { return this._isUninitialized; }
+    get random() { return Math.random(); }
+}

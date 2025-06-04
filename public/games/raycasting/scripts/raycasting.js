@@ -1,8 +1,46 @@
-import Util from './Util.js';
-import Vector from './Vector.js';
-import Segment from './Segment.js';
-import Ray from './Ray.js';
-import Raycaster, { SegmentVisibilility } from './Raycaster.js';
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const Util_js_1 = __importDefault(require("./Util.js"));
+const Vector_js_1 = __importDefault(require("./Vector.js"));
+const Segment_js_1 = __importDefault(require("./Segment.js"));
+const Ray_js_1 = __importDefault(require("./Ray.js"));
+const Raycaster_js_1 = __importStar(require("./Raycaster.js"));
 const isPressed = {};
 document.addEventListener('keydown', (e) => {
     isPressed[e.key] = true;
@@ -14,31 +52,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const endpoints = [
-        new Vector(-100, -100),
-        new Vector(100, -100),
-        new Vector(-200, 0),
-        new Vector(0, -200),
-        new Vector(200, 0)
+        new Vector_js_1.default(-100, -100),
+        new Vector_js_1.default(100, -100),
+        new Vector_js_1.default(-200, 0),
+        new Vector_js_1.default(0, -200),
+        new Vector_js_1.default(200, 0)
     ];
     const walls = [
-        new Segment(endpoints[0], endpoints[1]),
-        new Segment(endpoints[2], endpoints[3]),
-        new Segment(endpoints[3], endpoints[4]),
+        new Segment_js_1.default(endpoints[0], endpoints[1]),
+        new Segment_js_1.default(endpoints[2], endpoints[3]),
+        new Segment_js_1.default(endpoints[3], endpoints[4]),
     ];
-    const raycaster = new Raycaster(new Vector(0, 0), 0);
+    const raycaster = new Raycaster_js_1.default(new Vector_js_1.default(0, 0), 0);
     setup(canvas, ctx);
     const render = createRenderers(ctx);
     let mousePos = null;
     let prevMousePos = null;
     // update + render
     setInterval(() => {
-        mousePos = Util.getRelativeMousePos(canvas, new Vector(canvas.width / 2, canvas.height / 2));
+        mousePos = Util_js_1.default.getRelativeMousePos(canvas, new Vector_js_1.default(canvas.width / 2, canvas.height / 2));
         drawBackground(canvas, ctx);
         if (mousePos && prevMousePos) {
             raycaster.angle += mousePos.subtract(prevMousePos).x / 100;
         }
         if (countMoveKeysPressed() > 0) {
-            let direction = new Vector(0, 0);
+            let direction = new Vector_js_1.default(0, 0);
             if (isPressed['w']) {
                 direction.x += 1;
             }
@@ -64,15 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
             let color;
             const wallVisibility = segmentVisibilityMap.get(wall);
             switch (wallVisibility) {
-                case SegmentVisibilility.Invisible:
+                case Raycaster_js_1.SegmentVisibilility.Invisible:
                     color = 'black';
                     break;
-                case SegmentVisibilility.Visible:
+                case Raycaster_js_1.SegmentVisibilility.Visible:
                     color = 'yellow';
                     break;
-                case SegmentVisibilility.PartiallyVisible:
-                case SegmentVisibilility.PartiallyVisibleStart:
-                case SegmentVisibilility.PartiallyVisibleEnd:
+                case Raycaster_js_1.SegmentVisibilility.PartiallyVisible:
+                case Raycaster_js_1.SegmentVisibilility.PartiallyVisibleStart:
+                case Raycaster_js_1.SegmentVisibilility.PartiallyVisibleEnd:
                     color = 'magenta';
                     break;
             }
@@ -86,8 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
             resetSettings(ctx);
         });
         // render raycaster fov limits as rays
-        const leftRay = new Ray(raycaster.origin, raycaster.leftLimit);
-        const rightRay = new Ray(raycaster.origin, raycaster.rightLimit);
+        const leftRay = new Ray_js_1.default(raycaster.origin, raycaster.leftLimit);
+        const rightRay = new Ray_js_1.default(raycaster.origin, raycaster.rightLimit);
         ctx.strokeStyle = 'magenta';
         render.ray(leftRay);
         render.ray(rightRay);
@@ -128,7 +166,7 @@ function createRenderers(ctx) {
         },
         ray(ray) {
             const { origin, angle } = ray;
-            const end = origin.add(Vector.fromAngle(angle).scale(1e5));
+            const end = origin.add(Vector_js_1.default.fromAngle(angle).scale(1e5));
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(origin.x, origin.y);
@@ -138,7 +176,7 @@ function createRenderers(ctx) {
         },
         raycaster(caster) {
             const { origin, angle } = caster;
-            const end = origin.add(Vector.fromAngle(angle).scale(1e5));
+            const end = origin.add(Vector_js_1.default.fromAngle(angle).scale(1e5));
             const radius = 15;
             ctx.save();
             ctx.beginPath();

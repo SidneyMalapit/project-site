@@ -1,4 +1,6 @@
-export default class Vector {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class Vector {
     constructor(_x, _y) {
         this._x = _x;
         this._y = _y;
@@ -29,3 +31,4 @@ export default class Vector {
     distanceTo(v) { return this.subtract(v).magnitude; }
     static fromAngle(angle) { return new Vector(Math.cos(angle), Math.sin(angle)); }
 }
+exports.default = Vector;
