@@ -1,0 +1,75 @@
+@import url('./card.css');
+
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+#display {
+  flex: 1;
+  display: flex;
+  position: relative;
+  flex-direction: column-reverse;
+}
+
+#player-hand, #dealer-hand {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &:active {
+    visibility: visible;
+  }
+}
+
+#start-notice {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#end-info {
+  text-align: center;
+
+  &::after {
+    content: '\a0';
+  }
+}
+
+.hand-info {
+  font-weight: bold;
+}
+
+.cards {
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+
+  &.winner {
+    background-color: var(--background2);
+    transition: background-color var(--transition);
+  }
+}
+
+.game-action {
+  & > span:first-child {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}
+
+#game-start-actions, #game-play-actions {
+  display: none;
+  justify-content: center;
+  gap: 0.5rem;
+
+  &.active {
+    display: flex;
+  }
+}

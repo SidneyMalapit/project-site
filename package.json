@@ -1,0 +1,29 @@
+{
+  "name": "test-site",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx tsx watch --include public/**/* index"
+  },
+  "keywords": [],
+  "author": "Sidney Malapit",
+  "license": "ISC",
+  "description": "cool website",
+  "devDependencies": {
+    "@types/koa": "^2.15.0",
+    "@types/koa-json": "^2.0.23",
+    "@types/koa-logger": "^3.1.5",
+    "@types/koa-router": "^7.4.8",
+    "@types/koa-static": "^4.0.4",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "handlebars": "^4.7.8",
+    "koa": "^2.15.3",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^13.0.1",
+    "koa-static": "^5.0.0"
+  }
+}

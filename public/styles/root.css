@@ -1,0 +1,57 @@
+@import './header.css';
+@import './theme.css';
+
+:root {
+  --serif: 'Times New Roman', serif;
+  --sans-serif: 'Verdana', sans-serif;
+  --monospace: 'Courier New', monospace;
+
+  --background: white;
+  --background2: lightgray;
+  --text: black;
+  --link: #00f;
+  --link-visited: hsl(280, 50%, 45%);
+  --border: black;
+  --hover: var(--background2);
+
+  --transition: 100ms;
+
+  font-size: 1.25rem;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+* {
+  color: var(--text);
+
+  &:is(a) {
+    color: var(--link);
+
+    &:visited {
+      color: var(--link-visited);
+    }
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--sans-serif);
+  box-sizing: border-box;
+  background-color: var(--background);
+
+  & > * { padding: 1rem; }
+
+  main {
+    flex: 1;
+  }
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  {{#each styles}}
+  <link rel="stylesheet" href="{{this}}">
+  {{/each}}
+  <!-- all dependencies should be included within the below script -->
+  {{#each scripts}}
+  <script src="{{this}}" type="module"></script>
+  {{/each}}
+  {{#each headPartials}}
+  {{> (lookup @root.headPartials @index)}}
+  {{/each}}
+</head>
+<body>
+  <!-- dummy script to stop fouc -->
+  <script>0</script>
+  {{> header}}
+  <main class="root">{{{body}}}</main>
+</body>
+</html>

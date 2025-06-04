@@ -1,0 +1,66 @@
+@keyframes player-card-slide {
+  from { transform: translateY(-100vh); }
+  to { transform: translateY(0); }
+}
+
+@keyframes dealer-card-slice {
+  from { transform: translateY(-50vh); }
+  to { transform: translateY(0); }
+}
+
+.playing-card {
+  --scale: 3rem;
+  --shadow: 0.25rem;
+
+  position: relative;
+  width: min-content;
+  height: min-content;
+  line-height: 0;
+
+  &:not(:first-child, :nth-child(2)) {
+    #player-hand & {
+      z-index: 1;
+      animation: player-card-slide calc(3 * var(--transition));
+    }
+    #dealer-hand & {
+      z-index: 0;
+      animation: dealer-card-slice calc(2 * var(--transition));
+    }
+  }
+
+  & > img {
+    display: block;
+    width: calc(2.5 * var(--scale));
+    height: calc(3.5 * var(--scale));
+  }
+
+  transition: transform var(--transition);
+
+  &:hover {
+    transform: translateY(calc(-1 * var(--shadow)));
+  }
+
+  &::before {
+    z-index: -1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 0.5rem;
+    content: '';
+    visibility: hidden;
+    background-color: var(--background2);
+    transition-property: visibility transform;
+    transition-duration: var(--transition);
+  }
+
+  &:hover::before {
+    visibility: visible;
+    transform: translate(var(--shadow), var(--shadow));
+  }
+
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
