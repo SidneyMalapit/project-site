@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Router from 'koa-router';
 
-import { render, getView } from './serve-util';
+import { render, getView } from './serve-util.js';
 
 const games = fs.readdirSync('./views/games').map((game) => game.split('.')[0]);
 

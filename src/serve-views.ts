@@ -2,9 +2,9 @@ import fs from 'fs';
 import Handlebars from 'handlebars';
 import Router from 'koa-router';
 
-import { getView, render } from './serve-util';
-import routes from './routes';
-import gamesRouter from './serve-games';
+import { getView, render } from './serve-util.js';
+import routes from './routes.js';
+import gamesRouter from './serve-games.js';
 
 const viewsRouter = new Router();
 

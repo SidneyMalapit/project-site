@@ -4,7 +4,7 @@ import logger from 'koa-logger';
 import json from 'koa-json';
 import serve from 'koa-static';
 
-import viewsRouter from './serve-views';
+import viewsRouter from './serve-views.js';
 
 const app = new Koa();
 
@@ -31,4 +31,4 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-module.exports = app;
+export default app;
