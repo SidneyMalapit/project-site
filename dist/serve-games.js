@@ -25,7 +25,7 @@ gamesRouter.get('/:game', (ctx) => {
     }
     view.data.title = game;
     view.data.styles.push(`/${viewName}/styles/${game}.css`);
-    view.data.scripts.push(`/${viewName}/scripts/${game}`);
+    view.data.scripts.push(`/${viewName}/scripts/${game}.js`);
     ctx.status = 200;
 });
 export default gamesRouter;

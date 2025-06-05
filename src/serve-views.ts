@@ -65,6 +65,7 @@ viewsRouter.get('/:viewName', async (ctx) => {
   view.data.styles.push(`/styles/${viewName}.css`);
   view.data.scripts.push(`/scripts/${viewName}.js`);
   ctx.status = 200;
+  console.log(view.data);
 });
 
 export default viewsRouter;

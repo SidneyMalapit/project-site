@@ -4,7 +4,7 @@ import logger from 'koa-logger';
 import json from 'koa-json';
 import serve from 'koa-static';
 import viewsRouter from './serve-views.js';
-const app = new Koa();
+const app = new Koa;
 app
     .use(async (ctx, next) => {
     await next();
