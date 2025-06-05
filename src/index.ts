@@ -6,7 +6,7 @@ import serve from 'koa-static';
 
 import viewsRouter from './serve-views.js';
 
-const app = new Koa();
+const app = new Koa;
 
 app
 .use(async (ctx, next) => {

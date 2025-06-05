@@ -6,6 +6,5 @@ export function getView(viewName: string): string {
 }
 
 export function render(template: string, data?: object): string {
-  const compiledTemplate = Handlebars.compile(template);
-  return compiledTemplate(data);
+  return Handlebars.compile(template)(data);
 }
